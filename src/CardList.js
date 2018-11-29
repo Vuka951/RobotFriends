@@ -3,9 +3,12 @@ import Card from './Card';
 
 class CardList extends Component {
   render() {
+    const {robots} = this.props;
     return (
       <div>
-        <Card/>
+        {robots.map((user) => {
+        return <Card name={user.name} email={user.email} id={user.id} key={user.id}/>
+      })}
       </div>
     )
   }
