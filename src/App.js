@@ -1,38 +1,25 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
 import CardList from './components/CardList';
 import SearchBox from './components/SearchBox';
 import Scroll from './components/Scroll';
 import ErrorBoundry from './components/ErrorBoundry';
+import { setSearchValue, getRobots} from './actions';
 
 class App extends Component {
-    state = {
-        robots: [],
-        searchvalue: '',
+    componentDidMount() {
+        this.props.onGetRebots();
     }
 
-    componentDidMount() {
-        fetch('https://jsonplaceholder.typicode.com/users').then( res => {
-            return res.json();
-        }).then(users => {
-            this.setState({
-                robots: users,
-            })
-        })
-    }
-    onSearchChange = (e) => {
-        this.setState({
-            searchvalue: e.target.value,
-        })
-    }
   render() {
-    const filteredRobots = this.state.robots.filter(robot => {
-        return robot.name.toLocaleLowerCase().includes(this.state.searchvalue.toLocaleLowerCase());
+    const filteredRobots = this.props.robots.filter(robot => {
+        return robot.name.toLocaleLowerCase().includes(this.props.searchvalue.toLocaleLowerCase());
     })
-    return !this.state.robots.length ? (<h1>Loading data</h1>)
+    return this.props.isPending ? (<h1>Loading data</h1>)
     :(
         <div className="tc">
         <h1 className="f1">RobotFriends</h1>
-        <SearchBox onSearchChange={this.onSearchChange}/>
+        <SearchBox onSearchChange={this.props.onSearchChange}/>
         <Scroll>
         <ErrorBoundry>
             <CardList robots={filteredRobots}/>
@@ -41,6 +28,18 @@ class App extends Component {
         </div>
     )
     }
-  }
+}
+const mapStateToProps = (state) => ({
+    searchvalue: state.searchRobots.searchvalue,
+    robots: state.getRobots.robots,
+    isPending: state.getRobots.isPending,
+    error: state.getRobots.error
+})
 
-export default App;
+const mapDispatchToProps = (dispatch) => ({
+    onSearchChange: (e) => dispatch(setSearchValue(e.target.value)),
+    onGetRebots: () => dispatch(getRobots())
+})
+ 
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
