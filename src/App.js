@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import CardList from './components/CardList';
 import SearchBox from './components/SearchBox';
 import Scroll from './components/Scroll';
+import ErrorBoundry from './components/ErrorBoundry';
 
 class App extends Component {
     state = {
@@ -29,14 +30,16 @@ class App extends Component {
     })
     return !this.state.robots.length ? (<h1>Loading data</h1>)
     :(
-            <div className="tc">
-              <h1 className="f1">RobotFriends</h1>
-              <SearchBox onSearchChange={this.onSearchChange}/>
-              <Scroll>
-                <CardList robots={filteredRobots}/>
-              </Scroll>
-            </div>
-          )
+        <div className="tc">
+        <h1 className="f1">RobotFriends</h1>
+        <SearchBox onSearchChange={this.onSearchChange}/>
+        <Scroll>
+        <ErrorBoundry>
+            <CardList robots={filteredRobots}/>
+        </ErrorBoundry>
+        </Scroll>
+        </div>
+    )
     }
   }
 
