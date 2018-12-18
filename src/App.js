@@ -1,33 +1,11 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import CardList from './components/CardList';
-import SearchBox from './components/SearchBox';
-import Scroll from './components/Scroll';
-import ErrorBoundry from './components/ErrorBoundry';
 import { setSearchValue, getRobots} from './actions';
-import Header from './components/Header';
+import MainPage from './components/MainPage';
 
 class App extends Component {
-    componentDidMount() {
-        this.props.onGetRebots();
-    }
-
   render() {
-    const filteredRobots = this.props.robots.filter(robot => {
-        return robot.name.toLocaleLowerCase().includes(this.props.searchvalue.toLocaleLowerCase());
-    })
-    return this.props.isPending ? (<h1>Loading data</h1>)
-    :(
-        <div className="tc">
-        <Header/>
-        <SearchBox onSearchChange={this.props.onSearchChange}/>
-        <Scroll>
-        <ErrorBoundry>
-            <CardList robots={filteredRobots}/>
-        </ErrorBoundry>
-        </Scroll>
-        </div>
-    )
+    return <MainPage {...this.props}/>
     }
 }
 const mapStateToProps = (state) => ({
